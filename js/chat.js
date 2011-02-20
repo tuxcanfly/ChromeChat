@@ -26,7 +26,32 @@ PubSubClient.prototype = {
             if (settings.DEBUG) {
                 console.log("status is ", status);
             }
+            if (status == Strophe.Status.CONNECTED) {
+                console.log("getting roster");
+                context.requestRoster(context._logger);
+                context.registerHandlers({
+                    "subscribe"   : context._logger,
+                    "subscribed"  : context._logger,
+                    "unsubscribe" : context._logger,
+                    "unsubscribed": context._logger
+                });
+                context._get_roster();
+            }
         };
+    },
+
+    _get_roster: function () {
+        iq_roster = $iq({type: 'get', id: pubsub._conn.getUniqueId()})
+                    .c("query", {xmlns: "jabber:iq:roster"});
+        this._conn.sendIQ(iq_roster, this._roster_cb);
+    },
+
+    _roster_cb: function(data) {
+        console.log(data);
+    },
+
+    _logger: function(data) {
+        console.log(data);
     },
 
     /* callback fired before disconnect */
@@ -34,7 +59,8 @@ PubSubClient.prototype = {
     },
 
     focus: true, /* whether the window has focus */
-    unread: 0 /* count of unread messages */
+    unread: 0 /* count of unread messages */,
+    context: this
 
 };
 
