@@ -27,7 +27,6 @@ PubSubClient.prototype = {
                 console.log("status is ", status);
             }
             if (status == Strophe.Status.CONNECTED) {
-                console.log("getting roster");
                 context.requestRoster(context._logger);
                 context.registerHandlers({
                     "subscribe"   : context._logger,
@@ -41,13 +40,20 @@ PubSubClient.prototype = {
     },
 
     _get_roster: function () {
+        console.log("getting roster");
         iq_roster = $iq({type: 'get', id: pubsub._conn.getUniqueId()})
                     .c("query", {xmlns: "jabber:iq:roster"});
-        this._conn.sendIQ(iq_roster, this._roster_cb);
+        this._conn.sendIQ(iq_roster, this._roster_cb(this));
     },
 
-    _roster_cb: function(data) {
-        console.log(data);
+    _roster_cb: function(context) {
+        return function(data) {
+                console.log(data);
+                context.roster = data;
+                $(data).find("item").each(function() {
+                    context.options.roster_item_cb(this);
+                });
+        };
     },
 
     _logger: function(data) {

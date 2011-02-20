@@ -3,14 +3,27 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <script type="text/javascript" charset="utf-8" src="chat/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="chat/jquery.tmpl.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/strophe.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/mixin.support.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/strophe.roster.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/chat.js"></script>
+    <script id="roster_item_tmpl" type="text/x-jquery-tmpl">
+        <li>
+            <span class="roster_item_name">${ name }</span>
+        </li>
+    </script>
     <script type="text/javascript" charset="utf-8">
+        function roster_item_cb(roster_item) {
+            $("#roster_item_tmpl")
+                .tmpl({'name': $(roster_item)
+                .attr("name")})
+                .prependTo($("#roster"));
+        }
         options = {
-            "username": "javedkhanma@gmail.com",
-            "password": "davinci32968011"
+            username: "javedkhanma@gmail.com",
+            password: "davinci32968011",
+            roster_item_cb: roster_item_cb
         };
         pubsub = new PubSubClient(options);
     </script>
@@ -18,6 +31,9 @@
 
 </head>
 <body>
-    
+<div>
+    <h2>Buddy List</h2>
+    <ul id="roster"></ul>
+</div>
 </body>
 </html>
