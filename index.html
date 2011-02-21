@@ -2,6 +2,16 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <style type="text/css">
+        .unavailable {
+            background-color: light-gray;
+        }
+        .available {
+            background-color: light-green;
+        }
+    </style>
+
     <script type="text/javascript" charset="utf-8" src="chat/jquery-1.4.4.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/jquery.tmpl.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/strophe.js"></script>
@@ -9,21 +19,35 @@
     <script type="text/javascript" charset="utf-8" src="chat/strophe.roster.js"></script>
     <script type="text/javascript" charset="utf-8" src="chat/chat.js"></script>
     <script id="roster_item_tmpl" type="text/x-jquery-tmpl">
-        <li>
-            <span class="roster_item_name">${ name }</span>
+        <li id=${ jid } class="roster_item unavailable">
+            <span>${ name }</span>
         </li>
     </script>
     <script type="text/javascript" charset="utf-8">
         function roster_item_cb(roster_item) {
             $("#roster_item_tmpl")
-                .tmpl({'name': $(roster_item)
-                .attr("name")})
+                .tmpl({
+                    'name': $(roster_item).attr("name"),
+                    'jid': $(roster_item).attr("jid").split("@")[0]
+                })
                 .prependTo($("#roster"));
-        }
+        };
+        function pres_handler(stanza) {
+            jid = $(stanza).attr("from").split("@")[0];
+            if (jid) {
+                status = $(stanza).attr("type") || $(stanza).find("show").text();
+                status_msg = $(stanza).find("status").text();
+                $("#"+jid).attr("class", status)
+                    .insertBefore("ul li:first");
+            }
+            //console.log(jid, " is now ", $(stanza).find("show").text());
+            return true;
+        };
         options = {
-            username: "javedkhanma@gmail.com",
-            password: "davinci32968011",
-            roster_item_cb: roster_item_cb
+            username      : "javedkhanma@gmail.com",
+            password      : "davinci32968011",
+            roster_item_cb: roster_item_cb,
+            pres_handler  : pres_handler
         };
         pubsub = new PubSubClient(options);
     </script>

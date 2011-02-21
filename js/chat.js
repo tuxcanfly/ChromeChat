@@ -1,10 +1,11 @@
 settings = {
   'BOSH_SERVICE': "http://localhost/xmpp-httpbind",
-  'DEBUG': true
+  'DEBUG': true,
+  'STATUS': 'available'
 };
 
 PubSubClient.prototype = {
-  
+
     connect: function(username, password) {
         console.log("logging in as ", username);
         this._conn = new Strophe.Connection(settings.BOSH_SERVICE);
@@ -15,8 +16,9 @@ PubSubClient.prototype = {
 
     /* disconnect from the xmpp server */
     disconnect: function() {
-        this._conn.disconnect();
-        this._on_disconnect();
+        this._conn.send($pres({type: "unavailable"}), function() {
+            this._conn.disconnect();
+        });
     },
 
     /* callback fired when connection status changes */
@@ -25,16 +27,13 @@ PubSubClient.prototype = {
             context._jid = context._conn.jid;
             if (settings.DEBUG) {
                 console.log("status is ", status);
+                //context._conn.xmlOutput = context._logger;
             }
             if (status == Strophe.Status.CONNECTED) {
-                context.requestRoster(context._logger);
-                context.registerHandlers({
-                    "subscribe"   : context._logger,
-                    "subscribed"  : context._logger,
-                    "unsubscribe" : context._logger,
-                    "unsubscribed": context._logger
-                });
                 context._get_roster();
+                context._conn.send($pres());
+                context.pres_handler = context._conn.addHandler(context.options.pres_handler, null,
+                        'presence', null, null, null);
             }
         };
     },
@@ -58,10 +57,7 @@ PubSubClient.prototype = {
 
     _logger: function(data) {
         console.log(data);
-    },
-
-    /* callback fired before disconnect */
-    _on_disconnect: function(status) {
+        return true;
     },
 
     focus: true, /* whether the window has focus */
