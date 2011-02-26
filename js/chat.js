@@ -34,6 +34,8 @@ PubSubClient.prototype = {
                 context._conn.send($pres());
                 context.pres_handler = context._conn.addHandler(context.options.pres_handler, null,
                         'presence', null, null, null);
+                context.msg_handler = context._conn.addHandler(context.options.chat_msg_cb, null,
+                        'message', null, null, null);
             }
         };
     },
