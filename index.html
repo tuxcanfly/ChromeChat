@@ -103,8 +103,8 @@
             return true;
         };
         options = {
-            username      : "javedkhanma@gmail.com",
-            password      : "davinci32968011",
+            username      : localStorage["jid"],
+            password      : localStorage["password"],
             roster_item_cb: roster_item_cb,
             pres_handler  : pres_handler,
             chat_msg_cb   : chat_msg_cb

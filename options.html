@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Options for Chrome Chat</title>
+	<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="options.js"></script>
+</head>
+<body onload="loadOptions()">
+	<h1>Account Details</h1>
+	<label for="jid">Jabber Id:</label>
+	<input id="jid" type="text" name="jid" value="" />
+	<span style="font-size: 11px;">e.g.: pat@example.com</span>
+	<br />
+	<label  for="password">Password</label>
+	<input id="password" type="password" name="password" value="" />
+	<br />
+	<button onclick="saveOptions()">Save</button>
+	<br />
+    <span id="saved"></span>
+</body>
+</html>

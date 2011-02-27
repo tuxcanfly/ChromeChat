@@ -1,12 +1,13 @@
 {
-    "name": "Chrome Chat",
-        "version": "1.0",
-        "description": "Shows buddy list",
-        "browser_action": {
-            "default_icon": "icon.png",
-            "popup": "index.html"
-        },
-        "permissions": [
-            "http://localhost"
-            ]
+    "name"           : "Chrome Chat",
+    "version"        : "1.0",
+    "description"    : "Shows buddy list",
+    "browser_action" : {
+        "default_icon"    : "icon.png",
+        "popup"           : "index.html"
+    },
+    "options_page"   : "options.html",
+    "permissions"    : [
+        "http://localhost"
+    ]
 }
