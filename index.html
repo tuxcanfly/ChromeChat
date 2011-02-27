@@ -18,7 +18,6 @@
             background-color: lightpink;
         }
         ul#roster{
-            width: 250px;
             list-style: none;
         }
         ul#roster li{
@@ -50,7 +49,7 @@
     <script id="roster_item_tmpl" type="text/x-jquery-tmpl">
         <li id=${ jid } class="roster_item unavailable">
             <img src="unavailable.png" alt="unavailable" />
-            <a href="#" class="roster_link" onclick="open_chat({'jid': '${ jid }', 'name': '${ name }'})">${ name }</a>
+            <span>${ name }</span>
         </li>
     </script>
     <script id="chat_dialog" type="text/x-jquery-tmpl">
@@ -130,7 +129,6 @@
 </head>
 <body>
 <div>
-    <h2>Buddy List</h2>
     <ul id="roster"></ul>
 </div>
 </body>
