@@ -36,6 +36,7 @@ PubSubClient.prototype = {
                         'presence', null, null, null);
                 context.msg_handler = context._conn.addHandler(context.options.chat_msg_cb, null,
                         'message', null, null, null);
+                context.options.connected_cb();
             }
         };
     },
@@ -50,6 +51,7 @@ PubSubClient.prototype = {
     _roster_cb: function(context) {
         return function(data) {
                 console.log(data);
+                context.options.roster_cb();
                 context.roster = data;
                 $(data).find("item").each(function() {
                     context.options.roster_item_cb(this);

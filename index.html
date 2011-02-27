@@ -99,36 +99,32 @@
                 $("#"+jid).attr("class", status)
                     .insertBefore("ul li:first");
             }
-            //console.log(jid, " is now ", $(stanza).find("show").text());
             return true;
         };
+        function roster_cb() {
+            $("div.loading").hide();
+        }
         options = {
             username      : localStorage["jid"],
             password      : localStorage["password"],
             roster_item_cb: roster_item_cb,
             pres_handler  : pres_handler,
-            chat_msg_cb   : chat_msg_cb
+            chat_msg_cb   : chat_msg_cb,
+            roster_cb     : roster_cb
         };
         pubsub = new PubSubClient(options);
 
-
-        $(document).ready(function() {
-            $(".roster_link").click(function(e) {
-                console.log("opening chat");
-                buddy = {};
-                buddy['jid'] = $(this).parent().attr('id');
-                buddy['name'] = $(this).text();
-                console.log(buddy);
-                //open_chat(buddy);
-                e.preventDefault();
-            });
-        });
     </script>
     <title>Chat</title>
 
 </head>
 <body>
 <div>
+    <div class="loading">
+        <label>Connecting ...</label>
+        <br />
+        <img src="ajax-loader.gif" alt="loading..." />
+    </div>
     <ul id="roster"></ul>
 </div>
 </body>
