@@ -38,18 +38,18 @@
         }
     </style>
 
-    <link type="text/css" href="chat-media/css/vader/jquery-ui-1.8.10.custom.css" rel="stylesheet" />
+    <link type="text/css" href="jquery-ui-1.8.10.custom.css" rel="stylesheet" />
 
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/jquery-1.4.4.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/jquery-ui-1.8.10.custom.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/jquery.tmpl.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/strophe.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/mixin.support.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/strophe.roster.js"></script>
-    <script type="text/javascript" charset="utf-8" src="chat-media/js/chat.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery.tmpl.js"></script>
+    <script type="text/javascript" charset="utf-8" src="strophe.js"></script>
+    <script type="text/javascript" charset="utf-8" src="mixin.support.js"></script>
+    <script type="text/javascript" charset="utf-8" src="strophe.roster.js"></script>
+    <script type="text/javascript" charset="utf-8" src="chat.js"></script>
     <script id="roster_item_tmpl" type="text/x-jquery-tmpl">
         <li id=${ jid } class="roster_item unavailable">
-            <img src="chat-media/img/unavailable.png" alt="unavailable" />
+            <img src="unavailable.png" alt="unavailable" />
             <a href="#" class="roster_link" onclick="open_chat({'jid': '${ jid }', 'name': '${ name }'})">${ name }</a>
         </li>
     </script>
@@ -96,7 +96,7 @@
             if (jid) {
                 status = $(stanza).find("show").text() || "available";
                 status_msg = $(stanza).find("status").text();
-                $("#"+jid+" img").attr("src", "chat-media/img/"+status+".png");
+                $("#"+jid+" img").attr("src", ""+status+".png");
                 $("#"+jid).attr("class", status)
                     .insertBefore("ul li:first");
             }
