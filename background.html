@@ -53,30 +53,21 @@
             <span>${ name }</span>
         </li>
     </script>
-    <script id="chat_dialog" type="text/x-jquery-tmpl">
-        <div id="chat_${ jid }" class="chat popup" title="${ name }">
-            <div class="messages">
-                <ul class="log">
-                    ${ msg }
-                </ul>
-            </div>
-            <textarea name="chat_input" rows="5" cols="30"></textarea>
-        </div>
-    </script>
     <script type="text/javascript" charset="utf-8">
 
         var unread = 0;
         var active = false;
+        var messages = [];
 
-        function open_chat(buddy, message) {
-            $("#chat_dialog")
-                .tmpl({
-                    'jid': buddy.jid,
-                    'name': buddy.name,
-                    'msg': message
-                })
-                .dialog();
-        }
+        function update_unread_counter() {
+            if (messages.length) {
+                chrome.browserAction.setBadgeText({text:String(messages.length)});
+            }
+            else {
+                chrome.browserAction.setBadgeText({text:String()});
+            }
+        };
+
         function roster_item_cb(roster_item) {
             $("#roster_item_tmpl")
                 .tmpl({
@@ -89,13 +80,13 @@
             if (!active) {
                 unread += 1;
             }
-            chrome.browserAction.setBadgeText({text:String(unread)});
             jid = $(stanza).attr("from");
             name = $("ul#roster li#" + jid.split('@')[0]).text() || jid;
             body = $(stanza).find("body").text();
             if (body) {
-                open_chat({'jid': jid, 'name': name}, body);
+                messages.push({'jid': jid, 'name': name, 'body': body});
             }
+            update_unread_counter();
             console.log(stanza);
             return true;
         }

@@ -40,6 +40,10 @@
 
     <link type="text/css" href="jquery-ui-1.8.10.custom.css" rel="stylesheet" />
 
+    <script type="text/javascript" charset="utf-8" src="jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery.tmpl.js"></script>
+
     <title>Chat</title>
 
 </head>
@@ -47,9 +51,41 @@
     <div id="wrapper">
     </div>
 
+    <script id="chat_dialog" type="text/x-jquery-tmpl">
+        <div id="chat_${ jid }" class="chat popup" title="${ name }">
+            <div class="messages">
+                <ul class="log">
+                    ${ msg }
+                </ul>
+            </div>
+            <textarea name="chat_input" rows="5" cols="30"></textarea>
+        </div>
+    </script>
     <script type="text/javascript" charset="utf-8">
+        function open_chat(buddy, message) {
+            console.log(buddy, message);
+            $("#chat_dialog")
+                .tmpl({
+                    'jid': buddy.jid,
+                    'name': buddy.name,
+                    'msg': message
+                })
+                .appendTo('#wrapper');
+        }
+
         var background_page = chrome.extension.getBackgroundPage();
-        document.getElementById('wrapper').innerHTML = background_page.$('#wrapper').html();
+        
+        var messages = background_page.messages;
+
+        if (messages.length) {
+            console.log(messages);
+            var message = messages.pop();
+            open_chat({'jid': message.jid, 'name': message.name}, message.body); 
+            background_page.update_unread_counter();
+        }
+        else {
+            document.getElementById('wrapper').innerHTML = background_page.$('#wrapper').html();
+        }
     </script>
 
 </body>
