@@ -64,6 +64,10 @@
         </div>
     </script>
     <script type="text/javascript" charset="utf-8">
+
+        var unread = 0;
+        var active = false;
+
         function open_chat(buddy, message) {
             $("#chat_dialog")
                 .tmpl({
@@ -82,6 +86,10 @@
                 .prependTo($("#roster"));
         };
         function chat_msg_cb(stanza) {
+            if (!active) {
+                unread += 1;
+            }
+            chrome.browserAction.setBadgeText({text:String(unread)});
             jid = $(stanza).attr("from");
             name = $("ul#roster li#" + jid.split('@')[0]).text() || jid;
             body = $(stanza).find("body").text();
@@ -100,6 +108,7 @@
                 $("#"+jid).attr("class", status)
                     .insertBefore("ul li:first");
             }
+            console.log(stanza);
             return true;
         };
         function roster_cb() {
