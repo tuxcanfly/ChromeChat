@@ -1,5 +1,5 @@
 settings = {
-  'BOSH_SERVICE': "http://localhost/xmpp-httpbind",
+  'BOSH_SERVICE': "http://localhost/http-bind/",
   'DEBUG': true,
   'STATUS': 'available'
 };
