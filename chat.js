@@ -73,8 +73,7 @@ PubSubClient.prototype = {
 function PubSubClient(options) {
     this.options = options;
     this.updates = new Array();
-    var connection = null;
-    connection = this.connect(options.username, options.password);
+    this.connection = this.connect(options.username, options.password);
     $(window).blur(function(context) {
         return function() {
             context.focus = false;

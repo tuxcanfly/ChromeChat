@@ -43,6 +43,7 @@
     <script type="text/javascript" charset="utf-8" src="jquery-1.4.4.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="jquery-ui-1.8.10.custom.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="jquery.tmpl.js"></script>
+    <script type="text/javascript" charset="utf-8" src="strophe.js"></script>
 
     <title>Chat</title>
 
@@ -52,16 +53,36 @@
     </div>
 
     <script id="chat_dialog" type="text/x-jquery-tmpl">
-        <div id="chat_${ jid }" class="chat popup" title="${ name }">
+        <div id="chat_${ jid }" data-jid="${ jid }" data-name=""{ name } class="chat popup" title="${ name }">
             <div class="messages">
-                <ul class="log">
-                    ${ msg }
-                </ul>
+                <ul class="log">${ name }:  ${ msg }</ul>
             </div>
-            <textarea name="chat_input" rows="5" cols="30"></textarea>
+            <textarea id="chat_input" name="chat_input" rows="5" cols="30"></textarea>
+            <input type="button" name="send" value="Send" id="send_msg" />
         </div>
     </script>
     <script type="text/javascript" charset="utf-8">
+
+        var background_page = chrome.extension.getBackgroundPage();
+        var my_jid = background_page.pubsub.connection.jid;
+        
+        $('#send_msg').live('click', function(e){ 
+            e.preventDefault();
+            var msg = $("#chat_input").val();
+            $('<ul class="log">' + my_jid + ': '  + msg + '</ul>').appendTo('.messages');
+            $('#chat_input').val('');
+            var msg = $msg({
+                'from': my_jid,
+                'to': $(this).parent().attr('data-jid'),
+                'type': 'chat'
+            })
+            .c('body')
+            .t(msg)
+            .tree();
+            console.log(msg);
+            background_page.pubsub.connection.send(msg);
+        });
+
         function open_chat(buddy, message) {
             console.log(buddy, message);
             $("#chat_dialog")
@@ -73,8 +94,6 @@
                 .appendTo('#wrapper');
         }
 
-        var background_page = chrome.extension.getBackgroundPage();
-        
         var messages = background_page.messages;
 
         if (messages.length) {
